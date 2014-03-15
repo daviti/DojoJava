@@ -1,0 +1,299 @@
+/*
+1. What query would you run to get all the countries that speak Slovene. Your query should return the name of the country, language and language percentage. You query should arrange the result by language percentage in descending order. 
+*/​
+​
+SELECT countries.name, languages.language, languages.percentage
+FROM languages
+LEFT JOIN countries ON languages.country_code = countries.code
+WHERE language="slovene"​
+ORDER BY languages.percentage DESC
+​
+​/*
+2. What query would you run to display the total number of cities for each country. Your query should return the name of the country and the total number of cities. You query should arrange the result by number of cities in descending order.
+*/​
+​
+SELECT countries.name, count(*) as cities
+FROM cities
+LEFT JOIN countries on cities.country_code = countries.code
+GROUP BY countries.name
+ORDER BY cities DESC
+​
+​/*
+3. What query would you run to get all the cities in Mexico with a population of greater than 500,000. Your query should arrange the result by population in descending order.
+*/​
+​
+SELECT cities.name, cities.population 
+FROM cities
+LEFT JOIN countries on cities.country_code = countries.code
+WHERE countries.name="mexico" AND cities.population > 500000​
+ORDER BY cities.population desc
+​
+​/*
+4. What query would you run to get all language in each country with a percentage greater than 89%. Your query should arrange the result by percentage in descending order.
+*/​
+​
+SELECT countries.name, languages.language, languages.percentage
+FROM languages
+LEFT JOIN countries on languages.country_code = countries.code
+WHERE languages.percentage > 89​
+ORDER BY languages.percentage DESC
+​
+​/*
+5. What query would you run to get all the countries with Surface Area below 501 and Population greater than 100,000. 
+*/​
+​
+SELECT name, surface_area, population
+FROM countries
+WHERE surface_area < 501 AND population > 100000​
+​
+​/*
+6. What query would you run to get all Constitutional Monarchy Countries with a capital greater than 200 and a life expectancy greater than 75 years.
+*/​
+​
+SELECT name, government_form, capital, life_expectancy
+FROM countries
+WHERE government_form = "constitutional monarchy" 
+​AND capital > 200 
+​AND life_expectancy > 75 
+​
+​/*
+7. What query would you run to get all the cities of Argentina inside the Buenos Aires district and have population greater than 500, 000. The query should return the Country Name, City Name, District and Population.
+*/​
+​
+SELECT countries.name, cities.name, cities.district, cities.population
+FROM cities
+LEFT JOIN countries ON cities.country_code = countries.code
+WHERE countries.name = 'Argentina' AND cities.district = "Buenos Aires" AND cities.population > 500000​
+​
+​/*
+8. What query would you run to summarize the number of countries in each region. The query should display the name of the region and the number of countries. Also, the query should arrange the result by number of countries in descending order.
+*/​
+​
+SELECT region, count(*) AS countries
+FROM countries
+GROUP BY region
+ORDER BY countries desc
+​
+
+
+
+Sakila Database
+​/*
+1.What query would you run to get  all the customers inside city_id = 312? Your query should return customer first name, last name, email, and address.
+*/​
+​
+SELECT customer.first_name, customer.last_name, customer.email, address.address
+FROM customer
+LEFT JOIN address ON customer.address_id = address.address_id
+WHERE address.city_id = 312​
+​
+​/*
+2.What query would you run to get all comedy films? Your query should return film title, description, release year, rating, special features and genre.
+*/​
+​
+SELECT film.title, film.description, film.release_year, film.rating, film.special_features, category.name as genre
+FROM category
+LEFT JOIN film_category ON category.category_id = film_category.category_id
+LEFT JOIN film ON film_category.film_id = film.film_id
+WHERE category.name = 'Comedy'​
+​
+​/*
+3.What query would you run to get all the films joined by actor_id=5? Your query should return the film title, description and release year.
+*/​
+​
+SELECT film.film_id, film.title, film.description, film.release_year
+FROM film 
+LEFT JOIN film_actor ON film.film_id = film_actor.film_id
+WHERE film_actor.actor_id = 5;
+​
+​/*
+4.What query would you run to get  all the customers in store_id = 1 and inside these cities (1, 42, 312 and 459)? Your query should return customer first name, last name, email, and address.
+*/​
+​
+SELECT customer.first_name, customer.last_name, customer.email, address.address
+FROM customer
+LEFT JOIN address ON customer.address_id = address.address_id
+WHERE customer.store_id = 1​
+​AND address.city_id IN (1, 42, 312, 459)
+​
+​/*
+5.What query would you run to get all the films with a "rating = G" and "special feature = behind the scenes",  joined by actor_id = 15? Your query should return the film title, description, release year, rate and special feature. (Hint: You may use LIKE function in getting the 'behind the scenes' part).
+*/​
+​
+SELECT film.title, film.description, film.release_year, film.rating, film.special_features 
+FROM film
+LEFT JOIN film_actor ON film_actor.film_id = film.film_id
+WHERE film.rating = "G" 
+​AND film.special_features 
+LIKE "%Behind the scenes%" 
+​AND actor_id = 15;
+​
+​/*
+6.What query would you run to get all the actors that joined in the film_id = 369? Your query should return the first_name, last name and last_update of the actors.
+*/​
+​
+SELECT actor.first_name, actor.last_name,actor.last_update
+FROM actor
+LEFT JOIN film_actor ON actor.actor_id = film_actor.actor_id
+WHERE film_actor.film_id = 369;
+​
+​/*
+7.What query would you run to get all drama films with a rental rate of 2.99 ? Your query should return film title, description, release year, rating, special features and genre.
+*/​
+​
+SELECT film.title, film.description, film.release_year, film.rating, film.special_features, category.name as genre
+FROM category
+LEFT JOIN film_category ON category.category_id = film_category.category_id
+LEFT JOIN film ON film_category.film_id = film.film_id
+WHERE film.rental_rate = 2.99​
+​AND category.name = 'Drama'​
+​
+​or 
+​
+SELECT film.title, film.description, film.release_year, film.rating, film.special_features, category.name
+FROM film
+LEFT JOIN film_category on film.film_id = film_category.film_id
+LEFT JOIN category on film_category.category_id = category.category_id
+WHERE category.name="drama" AND film.rental_rate = 2.99​
+​
+​/*
+8.What query would you run to get all the action films that joined by SANDRA KILMER. Your query should return film title, description, release year, rating, special features, genre and actor's first name and last name. 
+*/​
+​
+SELECT film.title, film.description, film.release_year, film.rating, film.special_features, category.name as genre, actor.first_name, actor.last_name
+FROM film 
+LEFT JOIN film_actor ON film_actor.film_id = film.film_id
+LEFT JOIN actor ON actor.actor_id = film_actor.actor_id
+LEFT JOIN film_category ON film_category.film_id = film.film_id
+LEFT JOIN category ON category.category_id = film_category.category_id
+WHERE actor.first_name = 'SANDRA'​
+​AND actor.last_name = 'KILMER'​
+​AND category.name = 'Action';
+​
+​# or...​
+​
+SELECT film.title, film.description, film.release_year, film.rating, film.special_features, category.name as genre, actor.first_name, actor.last_name
+FROM actor 
+LEFT JOIN film_actor ON actor.actor_id = film_actor.actor_id
+LEFT JOIN film ON film.film_id = film_actor.film_id
+LEFT JOIN film_category ON film.film_id = film_category.film_id
+LEFT JOIN category ON film_category.category_id = category.category_id
+WHERE actor.first_name = 'SANDRA'​
+​AND actor.last_name = 'KILMER'​
+​AND category.name = 'Action'​
+​
+
+
+Leads
+​/*
+1.What query would you run to get the total revenue for March of 2012?
+*/​
+​
+SELECT MONTHNAME(charged_datetime) as month , SUM(amount) as revenue
+FROM billing
+WHERE charged_datetime >= '2012-03-01' AND  charged_datetime <= '2012-03-31';
+​
+​/*
+2.What query would you run to get total revenue collected from client=2 ?
+*/​
+​
+SELECT clients_id, SUM(amount) as total_revenue 
+FROM billing 
+WHERE clients_id = 2;
+​
+​/*
+3.What query would you run to get all the sites that client = 10 owns?
+*/​
+​
+SELECT domain_name as website, clients_id 
+FROM sites 
+WHERE clients_id = 10;
+​
+​/*
+4.What query would you run to get total # of sites created each month for client=1 ? What about for client=20?
+*/​
+​
+SELECT clients_id, COUNT(domain_name) as number_of_websites, 
+​MONTHNAME(created_datetime) as month_created, 
+​YEAR(created_datetime) as year_created  
+FROM sites 
+WHERE clients_id = 1 
+GROUP BY MONTH(created_datetime), YEAR(created_datetime)
+ORDER BY sites.id;
+​
+​/* client=20? */​
+	
+SELECT clients_id, COUNT(domain_name) as number_of_websites, 
+​MONTHNAME(created_datetime) as month_created, 
+​YEAR(created_datetime) as year_created  
+FROM sites 
+WHERE clients_id = 20​
+GROUP BY MONTH(created_datetime), YEAR(created_datetime)
+ORDER BY sites.id;
+​
+​/*
+5. What query would you run to get the total # of leads we have generated for each of our sites between January 1st 2011 to February 15th 2011?
+*/​
+​
+SELECT sites.domain_name as website, COUNT(leads.id) as number_of_leads,
+​DATE_FORMAT(leads.registered_datetime,'%M %d, %Y') as date_generated  
+FROM sites
+LEFT JOIN leads ON sites.id=leads.sites_id 
+WHERE leads.registered_datetime BETWEEN '2011/01/01' and '2011/02/15' 
+GROUP BY sites.id;
+​
+​/*
+6.What query would you run to get a list of client name and the total # of leads we have generated for each of our client between January 1st 2011 to December 31st 2011? 
+*/​
+​
+SELECT CONCAT(clients.first_name," ", clients.last_name) as client_name, 
+COUNT(leads.id) as number_of_leads
+FROM clients
+LEFT JOIN sites ON clients.id=sites.clients_id 
+LEFT JOIN leads ON sites.id=leads.sites_id 
+WHERE leads.registered_datetime BETWEEN '2011/01/01' AND '2011/12/31'
+/*
+7.What query would you run to get a list of client name and the total # of leads we have generated for each client each month between month 1 - 6 of Year 2011?
+*/
+SELECT CONCAT(clients.first_name," ",clients.last_name) as client_name,
+COUNT(leads.id) as number_of_leads, 
+MONTHNAME(leads.registered_datetime) as month_generated
+FROM clients
+LEFT JOIN sites ON clients.id=sites.clients_id 
+LEFT JOIN leads ON sites.id=leads.sites_id 
+WHERE leads.registered_datetime BETWEEN '2011/01/01' and '2011/06/30'
+GROUP BY leads.id;
+/*
+8. What query would you run to get a list of client name and the total # of leads we have generated for each of our clients site between January 1st 2011 to December 31st  2011?  Come up with a second query that shows all the clients, the site name(s),  and the total number of leads generated from each site for all time?
+*/
+SELECT clients.first_name, clients.last_name, domain_name, count(*) AS number_of_leads
+FROM leads 
+LEFT JOIN sites ON leads.sites_id = sites.id
+LEFT JOIN clients ON sites.clients_id = clients.id
+WHERE registered_datetime >= '2011/01/01'  
+AND registered_datetime <= '2011/12/31'
+GROUP BY sites.clients_id, sites.id
+/*
+9.Write a single query that retrieves total revenue collected from each client each month of the year?
+*/
+SELECT CONCAT(clients.first_name, " ", clients.last_name) as client_name, 
+SUM(billing.amount) as Total_Revenue, 
+MONTHNAME(billing.charged_datetime) as month_charge, 
+YEAR(billing.charged_datetime) as year_charge
+FROM clients 
+LEFT JOIN billing ON clients.id=billing.clients_id 
+GROUP BY clients.id, YEAR(billing.charged_datetime), MONTH(billing.charged_datetime)
+/*
+10.Write a single query that retrieves all the sites that each client owns. Group the results so that each row shows a new client and have a new field called 'sites' that has all the sites that the client owns. (HINT: use GROUP_CONCAT)?
+*/
+SELECT CONCAT(clients.first_name," ",clients.last_name)as client_name, 
+​GROUP_CONCAT(sites.domain_name SEPARATOR ' / ') as sites 
+FROM clients
+LEFT JOIN sites ON clients.id=sites.clients_id 
+GROUP BY clients.id;
+
+
+
+
+
+

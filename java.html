@@ -1,0 +1,334 @@
+java.html
+
+<!doctype html>​
+​<html lang="en">​
+​<head>​
+	<meta charset="UTF-8">​
+	<title>Javascript Basic I Assignment</title>​
+	<script>
+		//declare an array, which containts combination of numbers, strings and functions.
+		x = [3,5,'Dojo', 'rocks', {name: 'Michael', title: 'Sensei'}];
+		//loop through an array and echo/log each
+		for(item in x){
+			console.log(x[item]);
+		}
+		//add or push new item in the x array
+		x.push(100);
+		console.log(x);
+		//push a new array inside the x array variable and display it as log
+		x.push(["hello", "world"]);
+		console.log(x);
+		//for loop that sums all the numbers between 1 to 500
+		total = 0;
+		for(var i = 1; i <= 500; i++){
+			var total = i + total;
+		}
+		console.log(total);
+		//get the time difference in milliseconds before and after looping 1 million times.
+		var date = new Date();
+		var start = date.getTime();
+		sum = 0;
+		for(var i = 1; i <= 1000000; i++ ){
+			var sum = i + sum;
+		}
+		var date = new Date();
+		var end = date.getTime();
+		var timediff = end - start;
+		console.log("Time Difference in milliseconds: " + timediff);
+	</script>​
+​</head>​
+​<body>​
+	
+​</body>​
+​</html>
+
+<!doctype html>​
+​<html lang="en">​
+​<head>​
+	<meta charset="UTF-8">​
+	<title>Javascript Basic 2 Assignment</title>​
+	<script>
+		//person object
+		person = {
+			name: "Oliver",
+			distance_travelled: 0,
+			say_name: function(){
+				alert(this.name);
+			},
+			say_something: function(x){
+				alert(this.name + " says " + x);
+			},
+		 	walk: function(){
+		 		person.distance_travelled += 3;
+		 		alert(person.name + " is walking " + person.distance_travelled); 
+		 	},
+		 	run: function(){
+		 		person.distance_travelled += 10;
+		 		alert(person.name + " is running " + person.distance_travelled);
+		 	},
+		 	crawl: function(){
+		 		person.distance_travelled += 1;
+		 		alert(person.name + " is crawling " + person.distance_travelled);
+		 	},
+		 	do_something: function(){
+				var random = [this.walk, this.run, this.crawl];
+				return random[Math.floor(Math.random()*3)]();		 		
+		 	},
+		 	fly: function(x, y){
+				var num = Math.floor(Math.random()*10);
+				if (num <= 2) {
+					return x();
+				} else {
+					return y();
+				};
+		 	}
+		};
+		//these are function to be passed to the fly method. type in person.fly(x,y) to test it out.
+		var x = function() {
+			alert('Flying... Weeeee!!!!');
+		}
+		var y = function() {
+			alert(':(');
+		}
+		//type these in the console to test the do_something method and the fly method
+		// person.fly(x,y);
+		// person.say_something("Hello");
+		// person.do_something();
+		// person.say_name();
+	</script>​
+​</head>​
+​<body>​
+	
+​</body>​
+​</html>
+
+
+<html>​
+​<head>​
+	<title>Javascript Demo</title>​
+	<style>
+			body {
+				background-color:black;
+				font-family: monospace;
+				color:white;
+				font-size:50px;
+				text-align: center;
+				margin-top:20%;
+			}
+			#magic{
+				color: #777;
+				border-right: 1px solid #777;
+				padding-right: 7px;
+				display: inline;
+			}
+	</style>​
+​</head>​
+​<body>​
+​
+	Coding is <div id="magic"></div>​
+​
+	<script>
+		(function () { 
+			var words = ["fun", "exciting", "about not giving up", "being helpful", "being open", "what I learned at CodingDojo!"],
+			el = document.getElementById('magic'),
+			word_counter = 0,
+			character_counter = 0;
+			
+			for (var i = 0; i < words.length; i++) {
+				words[i] = words[i].replace(/ /g, String.fromCharCode(160));
+			}
+			function updateText()
+			{
+				el.innerHTML = el.innerHTML+words[word_counter][character_counter++];
+				if(character_counter == words[word_counter].length + 1)
+				{
+					word_counter++; 	//choose a different word
+					character_counter = 0;	//start over with the first character of the word
+					el.innerHTML = '';  //set the html to be blank
+					//if we're displaying the last word, go back to the first word
+					if(word_counter == words.length)
+						word_counter = 0;
+				}
+			}
+			setInterval(updateText,300);
+		})();
+	</script>​
+​
+​</body>​
+​
+​</html>
+
+this are 2
+<!doctype html>​
+​<html lang="en">​
+​<head>​
+	<meta charset="UTF-8">​
+	<title>Intermediate II (More Callbacks)</title>​
+	<script>
+		bank_account = {
+			account_number: 123,
+			pin: 123,
+			cash_amount: 1000000,
+			owner: 'Johnny',
+			
+			withdraw: function(amount, callback){
+				this.cash_amount -= amount;
+				if(this.cash_amount >= 0){
+					callback(amount);
+				}
+				else{
+					this.cash_amount = 0;
+					alert("You are bankrupt!");
+				}
+			},
+			deposit: function(amount, callback){
+				this.cash_amount += amount;
+				callback(amount);
+			}
+		};
+		// A call to withdraw
+		bank_account.withdraw( 5000, function(amount){
+			alert("You withdraw " + amount + " from your bank account");
+			alert("You have " + bank_account.cash_amount + " money left");
+		});
+		// A call to deposit
+		bank_account.deposit( 5000, function(amount){
+			alert("You deposit " + amount + " to your bank account");
+			alert("You now have " + bank_account.cash_amount + " in your bank account");
+		});
+	</script>​
+​</head>​
+​<body>​
+	
+​</body>​
+​</html>
+<!doctype html>​
+​<html lang="en">​
+​<head>​
+    <meta charset="UTF-8">​
+    <title>Introduction to Callbacks</title>​
+    <script>
+        // declare the wizard
+        var wizard = {
+            mana: 500,
+            spells: {
+                open_sesame: {
+                    name: "Open Sesame",
+                    mana_cost: 10
+                },
+                chain_lightning: {
+                    name: "Chain Lightning",
+                    mana_cost: 20
+                },
+                fireball: {
+                    name: "Fireball",
+                    mana_cost: 30
+                }
+            },
+            castSpell: function(spell, callback) {
+                // decrease the wizard's mana
+                this.mana -= spell.mana_cost;
+                // run the callback from the parameter entered
+                callback(spell);
+            }
+        };
+        wizard.castSpell( wizard.spells.fireball, function(spell) {
+            /*  Have it say "The wizard casted a spell! The spell is [spell_name]."  */
+            alert("The wizard casted a spell! The spell is " + spell.name);
+            alert("The wizard spent " + spell.mana_cost + " mana to cast it");
+            alert("The wizard has " + wizard.mana + " left");
+        });
+        
+    </script>​
+​</head>​
+​<body>​
+​</body>​
+​</html>
+
+cardgame
+
+<!doctype html>​
+​<html lang="en">​
+​<head>​
+	<meta charset="UTF-8">​
+	<title>Intermediate II (More Callbacks)</title>​
+	<script>
+		bank_account = {
+			account_number: 123,
+			pin: 123,
+			cash_amount: 1000000,
+			owner: 'Johnny',
+			
+			withdraw: function(amount, callback){
+				this.cash_amount -= amount;
+				if(this.cash_amount >= 0){
+					callback(amount);
+				}
+				else{
+					this.cash_amount = 0;
+					alert("You are bankrupt!");
+				}
+			},
+			deposit: function(amount, callback){
+				this.cash_amount += amount;
+				callback(amount);
+			}
+		};
+		// A call to withdraw
+		bank_account.withdraw( 5000, function(amount){
+			alert("You withdraw " + amount + " from your bank account");
+			alert("You have " + bank_account.cash_amount + " money left");
+		});
+		// A call to deposit
+		bank_account.deposit( 5000, function(amount){
+			alert("You deposit " + amount + " to your bank account");
+			alert("You now have " + bank_account.cash_amount + " in your bank account");
+		});
+	</script>​
+​</head>​
+​<body>​
+	
+​</body>​
+​</html>
+<!doctype html>​
+​<html lang="en">​
+​<head>​
+    <meta charset="UTF-8">​
+    <title>Introduction to Callbacks</title>​
+    <script>
+        // declare the wizard
+        var wizard = {
+            mana: 500,
+            spells: {
+                open_sesame: {
+                    name: "Open Sesame",
+                    mana_cost: 10
+                },
+                chain_lightning: {
+                    name: "Chain Lightning",
+                    mana_cost: 20
+                },
+                fireball: {
+                    name: "Fireball",
+                    mana_cost: 30
+                }
+            },
+            castSpell: function(spell, callback) {
+                // decrease the wizard's mana
+                this.mana -= spell.mana_cost;
+                // run the callback from the parameter entered
+                callback(spell);
+            }
+        };
+        wizard.castSpell( wizard.spells.fireball, function(spell) {
+            /*  Have it say "The wizard casted a spell! The spell is [spell_name]."  */
+            alert("The wizard casted a spell! The spell is " + spell.name);
+            alert("The wizard spent " + spell.mana_cost + " mana to cast it");
+            alert("The wizard has " + wizard.mana + " left");
+        });
+        
+    </script>​
+​</head>​
+​<body>​
+​</body>​
+​</html>

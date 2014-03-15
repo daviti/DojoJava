@@ -1,0 +1,266 @@
+<?php session_start(); ?>​
+​<!doctype html>​
+​<html lang="en">​
+	<head>​
+		<meta charset="UTF-8">​
+		<title>Validation</title>​
+	</head>​
+	<body>​
+​<?php​
+	if(isset($_SESSION['error']))
+		echo $_SESSION['error'];
+	elseif(isset($_SESSION['success_message']))
+		echo $_SESSION['success_message'];
+​
+	$_SESSION = array();
+	unset($_SESSION);
+​?>​
+		<form action="process.php" method="post">​
+			<input type="hidden" name="action" value="register">​
+			<input type="text" name="email" placeholder="Enter Email">​
+			<input type="submit" value="Register">​
+		</form>​
+	</body>​
+​</html>
+
+<?php​
+​
+​session_start();
+​
+​if(isset($_POST['action']) && $_POST['action'] == 'register')
+{
+	if(empty($_POST['email']))
+		$_SESSION['error'] = "Sorry, the box cannot be blank! <br>";
+	elseif (!empty($_POST['email'])) 
+		if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+			$_SESSION['error'] = "The email address you entered " . $_POST['email'] . " is NOT a VALID email address! <br>";
+	if(!isset($_SESSION['error']))
+		$_SESSION['success_message'] = "The email address you entered " . $_POST['email'] . " is a VALID email address! Thank you! <br>";
+}
+​
+​header('Location: index.php');
+​
+​?>
+
+
+
+gold coin
+<?php session_start(); ?>​
+​
+​<!doctype html>​
+​<html lang="en">​
+​<head>​
+	<meta charset="UTF-8">​
+	<title>PHP Advanced - Intermediate Assignment</title>​
+	<link rel="stylesheet" type="text/css" href="style.css">​
+​</head>​
+​<body>​
+	<div class="container">​
+​<?php 	if (isset($_SESSION['error']))
+		{ ?>​
+			<div class="error">​
+​<?php 		foreach($_SESSION['error'] as $name => $message)
+			{ ?>​
+				<p><?= $message; ?></p>​
+​<?php 		} ?>​
+			</div>​
+​<?php   } ?>​
+​
+		<div class="gold">​
+			<span>Your Gold:</span>​
+			<input type="text" name="your-gold" value="<?php echo isset($_SESSION['gold_count']) ? $_SESSION['gold_count'] : '' ?>" disabled>​
+		</div>​
+		<div class="restart">​
+			<form id="restart-form" action="process.php" method="post">​
+				<input type="hidden" name="action" value="restart_form" />​
+				<input type="submit" value="Start Over">​
+			</form>​
+		</div>​
+		<div class="clear"></div>​
+		<div class="building">​
+			<h3>Farm</h3>​
+			<p>(earns 10-20 golds)</p>​
+			<form action="process.php" method="post">​
+				<input type="hidden" name="building" value="farm" />​
+				<input type="submit" value="Find Gold!"/>​
+			</form>​
+		</div>​
+​
+		<div class="building">​
+			<h3>Cave</h3>​
+			<p>(earns 5-10 golds)</p>​
+			<form action="process.php" method="post">​
+				<input type="hidden" name="building" value="cave" />​
+				<input type="submit" value="Find Gold!"/>​
+			</form>​
+		</div>​
+​
+		<div class="building">​
+			<h3>House</h3>​
+			<p>(earns 2-5 golds)</p>​
+			<form action="process.php" method="post">​
+				<input type="hidden" name="building" value="house" />​
+				<input type="submit" value="Find Gold!"/>​
+			</form>​
+		</div>​
+​
+		<div class="building">​
+			<h3>Casino!</h3>​
+			<p>(earns/takes 0-50 golds)</p>​
+			<form action="process.php" method="post">​
+				<input type="hidden" name="building" value="casino" />​
+				<input type="submit" value="Find Gold!"/>​
+			</form>​
+		</div>​
+		<div class="clear"></div>​
+		<div class="log">​
+			<span>Activities:</span>​
+			<div id="log"><?php echo isset($_SESSION['activity']) ? implode('', array_reverse($_SESSION['activity'])) : ''; ?></div>	
+		</div>​
+	</div>​
+​</body>​
+​</html>
+<?php​
+​session_start();
+​
+​// get_gold - function to return a random number​
+​// between the passed in min and max parameters​
+​function get_gold($min, $max)
+{
+	return rand($min, $max);
+}
+​
+​// Check if restart-form was submitted​
+​// If it is, unset the $_SESSION variable​
+​if (isset($_POST['action']) && $_POST['action'] == 'restart_form')
+{
+	$_SESSION = array();
+	header("Location: index.php");
+}
+​
+​// Initially check if the gold count is stored​
+​// in the session and if not, set it to 0​
+​if (!isset($_SESSION['gold_count'])) {
+	$_SESSION['gold_count'] = 0;
+}
+​
+​// Check which building form has been submitted​
+​// and set the appropriate session variables​
+​if (isset($_POST['building']))
+{
+	$building = $_POST['building'];
+	$gold_count = 0;
+	$activity = array();
+	$class="green";
+​
+	switch ($building) 
+	{
+		case 'farm':
+			$gold_count = get_gold(10, 20);
+		break;
+		
+		case 'cave':
+			$gold_count = get_gold(5, 10);
+		break;
+​
+		case 'house':
+			$gold_count = get_gold(2, 5);
+		break;
+​
+		case 'casino':
+			$percent = rand(0, 100);
+​
+			if ($percent <= 70) 
+			{
+				$gold_count = get_gold(-50, -1);
+				$class = "red";
+				$message = "Ouch";
+			}
+			else 
+			{
+				$gold_count = get_gold(1, 50);
+				$class = "green";
+				$message = "Nice";
+			}
+			
+		break;
+	}
+​
+	// $_SESSION['activity'] is an array that holds all of the activity​
+	// log information. We check if there is already data in this array​
+	// and if so store it in the local $activity variable that is later appended to​
+	if (isset($_SESSION['activity'])) 
+		// store a local copy of the current activity log array​
+		$activity = $_SESSION['activity'];
+	else​
+		$activity = array();
+	
+	// Set the current gold count and build the activity log message​
+	// to be return in the session to index.php​
+	$_SESSION['gold_count'] += $gold_count;
+	$_SESSION['activity'][] = '<span class="' . $class . '"> You entered a ' . $building . ' and earned ' . $gold_count . ' golds. ' . 
+							(($building == 'casino') ? '... '. $message .'.. ' : '') . '   (' . date('M d, Y h:ia') . ')</span><br>';
+	
+	header("Location: index.php");
+	exit();
+}
+​?>
+.container {
+	width: 810px;
+	margin: 0 auto;
+}
+​
+​.clear {
+	clear: both;
+}
+​
+​.red {
+	color: red;
+}
+​
+​.green {
+	color: green;
+}
+​
+​.success {
+	background: green;
+	color:#fff;
+	padding: 12px 20px;
+}
+​
+​.error {
+	background: red;
+	color: #fff;
+	padding: 12px 20px;
+}
+​
+​.gold {
+	float: left;
+	margin: 20px 0;
+}
+​
+​.restart {
+	float: left;
+	margin: 20px 0 20px 30px;
+}
+​
+​.building {
+	border: 1px solid;
+	width: 179px;
+	height: 140px;
+	float: left;
+	margin-right: 20px;
+	text-align: center;
+}
+​
+​.log {
+	margin-top: 20px;
+}
+​
+​#log {
+	border: 1px solid;
+	font-size: 13px;
+	width: 780px;
+	height: 150px;
+	overflow-y: scroll;
+}
